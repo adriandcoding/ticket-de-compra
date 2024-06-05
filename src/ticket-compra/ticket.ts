@@ -1,4 +1,5 @@
-import { calcularPrecioConIva } from "./ticket.helpers";
+import { obtenerPorcentajeIva } from "./ticket.helpers";
+
 const productos: LineaTicket[] = [
   {
     producto: {
@@ -35,41 +36,59 @@ const productos: LineaTicket[] = [
 ];
 
 const calculaTicket = (lineasTicket: LineaTicket[]): TicketFinal => {
+  const resultadoLineas: ResultadoLineaTicket[] = [];
+  const totalPorTipoIva = {
+    general: 0,
+    reducido: 0,
+    superreducidoA: 0,
+    superreducidoB: 0,
+    superreducidoC: 0,
+    sinIva: 0,
+  };
+
   let totalSinIva = 0;
+  let totalConIva = 0;
   let totalIva = 0;
-  const lineas: ResultadoLineaTicket[] = [];
 
   lineasTicket.forEach((linea) => {
     const { producto, cantidad } = linea;
     const precioSinIva = producto.precio * cantidad;
-    const precioConIva =
-      calcularPrecioConIva(producto.precio, producto.tipoIva) * cantidad;
-    const iva = precioConIva - precioSinIva;
+    const porcentajeIva = obtenerPorcentajeIva(producto.tipoIva);
+    const iva = (precioSinIva * porcentajeIva) / 100;
+    const precioConIva = precioSinIva + iva;
 
-    lineas.push({
+    resultadoLineas.push({
       nombre: producto.nombre,
       cantidad,
-      precioSinIva: +precioSinIva.toFixed(2),
+      precioSinIva,
       tipoIva: producto.tipoIva,
-      precioConIva: +precioConIva.toFixed(2),
+      precioConIva,
     });
 
     totalSinIva += precioSinIva;
+    totalConIva += precioConIva;
     totalIva += iva;
+    totalPorTipoIva[producto.tipoIva] += iva;
   });
-  const totalConIva = totalSinIva + totalIva;
+
+  const desgloseIva: TotalPorTipoIva[] = Object.keys(totalPorTipoIva).map(
+    (tipo) => ({
+      tipoIva: tipo as TipoIva,
+      cuantia: totalPorTipoIva[tipo as TipoIva],
+    })
+  );
 
   return {
-    lineas,
+    lineas: resultadoLineas,
     total: {
-      totalSinIva: +totalSinIva.toFixed(2),
-      totalConIva: +totalConIva.toFixed(2),
-      totalIva: +totalIva.toFixed(2),
+      totalSinIva,
+      totalConIva,
+      totalIva,
     },
-    desgloseIva: lineas.map((linea) => ({
-      tipoIva: linea.tipoIva,
-      cuantia: linea.precioConIva,
-    })),
+    desgloseIva,
   };
 };
-console.log(calculaTicket(productos));
+
+const ticketFinal = calculaTicket(productos);
+
+console.log(ticketFinal);

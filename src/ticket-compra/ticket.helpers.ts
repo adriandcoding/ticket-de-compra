@@ -17,7 +17,3 @@ export const obtenerPorcentajeIva = (tipoIva: TipoIva): number => {
     }
 };
   
-export const calcularPrecioConIva = (precio: number, tipoIva: TipoIva): number => {
-    const porcentajeIva = obtenerPorcentajeIva(tipoIva);
-    return +(precio * (1 + porcentajeIva / 100)).toFixed(2);
-  };
