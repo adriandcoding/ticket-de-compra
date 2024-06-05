@@ -1,4 +1,4 @@
-const getIva = (tipoIva: TipoIva): number => {
+export const obtenerPorcentajeIva = (tipoIva: TipoIva): number => {
     switch (tipoIva) {
       case "general":
         return 21;
@@ -15,4 +15,9 @@ const getIva = (tipoIva: TipoIva): number => {
       default:
         return 0;
     }
+};
+  
+export const calcularPrecioConIva = (precio: number, tipoIva: TipoIva): number => {
+    const porcentajeIva = obtenerPorcentajeIva(tipoIva);
+    return +(precio * (1 + porcentajeIva / 100)).toFixed(2);
   };
