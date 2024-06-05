@@ -37,14 +37,6 @@ const productos: LineaTicket[] = [
 
 const calculaTicket = (lineasTicket: LineaTicket[]): TicketFinal => {
   const resultadoLineas: ResultadoLineaTicket[] = [];
-  const totalPorTipoIva = {
-    general: 0,
-    reducido: 0,
-    superreducidoA: 0,
-    superreducidoB: 0,
-    superreducidoC: 0,
-    sinIva: 0,
-  };
 
   let totalSinIva = 0;
   let totalConIva = 0;
@@ -68,15 +60,9 @@ const calculaTicket = (lineasTicket: LineaTicket[]): TicketFinal => {
     totalSinIva += precioSinIva;
     totalConIva += precioConIva;
     totalIva += iva;
-    totalPorTipoIva[producto.tipoIva] += iva;
   });
-
-  const desgloseIva: TotalPorTipoIva[] = Object.keys(totalPorTipoIva).map(
-    (tipo) => ({
-      tipoIva: tipo as TipoIva,
-      cuantia: totalPorTipoIva[tipo as TipoIva],
-    })
-  );
+    
+    
 
   return {
     lineas: resultadoLineas,
