@@ -1,76 +1,34 @@
-import { obtenerPorcentajeIva } from "./ticket.helpers";
-
-const productos: LineaTicket[] = [
-  {
-    producto: {
-      nombre: "Legumbres",
-      precio: 2,
-      tipoIva: "general",
-    },
-    cantidad: 2,
-  },
-  {
-    producto: {
-      nombre: "Perfume",
-      precio: 20,
-      tipoIva: "general",
-    },
-    cantidad: 3,
-  },
-  {
-    producto: {
-      nombre: "Leche",
-      precio: 1,
-      tipoIva: "superreducidoC",
-    },
-    cantidad: 6,
-  },
-  {
-    producto: {
-      nombre: "Lasaña",
-      precio: 5,
-      tipoIva: "superreducidoA",
-    },
-    cantidad: 1,
-  },
-];
-
+import { procesarLineaTicket } from "./ticket.helpers";
+import { productos } from "./ticketdata";
 const calculaTicket = (lineasTicket: LineaTicket[]): TicketFinal => {
   const resultadoLineas: ResultadoLineaTicket[] = [];
+  const TotalPorTipoIva: TotalPorTipoIva[] = [];
 
   let totalSinIva = 0;
   let totalConIva = 0;
   let totalIva = 0;
-  let TotalPorTipoIva: TotalPorTipoIva[] = []
-  let desgloseIva: TotalPorTipoIva[] = []
-  
+
   lineasTicket.forEach((linea) => {
-    const { producto, cantidad } = linea;
-    const precioSinIva = producto.precio * cantidad;
-    const porcentajeIva = obtenerPorcentajeIva(producto.tipoIva);
-    const iva = (precioSinIva * porcentajeIva) / 100;
-    const precioConIva = precioSinIva + iva;
-
+    const resultadoLinea = procesarLineaTicket(linea);
     resultadoLineas.push({
-      nombre: producto.nombre,
-      cantidad,
-      precioSinIva,
-      tipoIva: producto.tipoIva,
-      precioConIva,
+      nombre: resultadoLinea.nombre,
+      cantidad: resultadoLinea.cantidad,
+      precioSinIva: resultadoLinea.precioSinIva,
+      tipoIva: resultadoLinea.tipoIva,
+      precioConIva: resultadoLinea.precioConIva,
     });
 
-    totalSinIva += precioSinIva;
-    totalConIva += precioConIva;
-    totalIva += iva;
+    totalSinIva += resultadoLinea.precioSinIva;
+    totalConIva += resultadoLinea.precioConIva;
+    totalIva += resultadoLinea.iva;
+
     TotalPorTipoIva.push({
-      tipoIva: producto.tipoIva,
-      cuantia: iva,
+      tipoIva: resultadoLinea.tipoIva,
+      cuantia: resultadoLinea.iva,
     });
-    desgloseIva = TotalPorTipoIva
-    
   });
-    
-    
+
+  const desgloseIva = TotalPorTipoIva;
 
   return {
     lineas: resultadoLineas,
