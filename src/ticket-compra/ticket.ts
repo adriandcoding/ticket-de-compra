@@ -41,7 +41,9 @@ const calculaTicket = (lineasTicket: LineaTicket[]): TicketFinal => {
   let totalSinIva = 0;
   let totalConIva = 0;
   let totalIva = 0;
-
+  let TotalPorTipoIva: TotalPorTipoIva[] = []
+  let desgloseIva: TotalPorTipoIva[] = []
+  
   lineasTicket.forEach((linea) => {
     const { producto, cantidad } = linea;
     const precioSinIva = producto.precio * cantidad;
@@ -60,6 +62,12 @@ const calculaTicket = (lineasTicket: LineaTicket[]): TicketFinal => {
     totalSinIva += precioSinIva;
     totalConIva += precioConIva;
     totalIva += iva;
+    TotalPorTipoIva.push({
+      tipoIva: producto.tipoIva,
+      cuantia: iva,
+    });
+    desgloseIva = TotalPorTipoIva
+    
   });
     
     
