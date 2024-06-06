@@ -21,7 +21,7 @@ interface ResultadoLineaTicket {
   nombre: string;
   cantidad: number;
   precioSinIva: number;
-  tipoIva: TipoIva;
+  tipoIva: TipoIva; 
   precioConIva: number;
 }
 

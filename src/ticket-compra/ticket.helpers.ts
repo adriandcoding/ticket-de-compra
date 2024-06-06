@@ -1,10 +1,10 @@
 // Función para calcular el precio sin IVA
-const calcularPrecioSinIva = (precio: number, cantidad: number): number => {
+export const calcularPrecioSinIva = (precio: number, cantidad: number): number => {
   return precio * cantidad;
 };
 
 // Función para obtener el porcentaje de IVA
-const obtenerPorcentajeIva = (tipoIva: TipoIva): number => {
+export const obtenerPorcentajeIva = (tipoIva: TipoIva): number => {
   switch (tipoIva) {
     case "general":
       return 21;
@@ -24,12 +24,12 @@ const obtenerPorcentajeIva = (tipoIva: TipoIva): number => {
 };
 
 // Función para calcular el IVA
-const calcularIva = (precioSinIva: number, porcentajeIva: number): number => {
+export const calcularIva = (precioSinIva: number, porcentajeIva: number): number => {
   return (precioSinIva * porcentajeIva) / 100;
 };
 
 // Función para calcular el precio con IVA
-const calcularPrecioConIva = (precioSinIva: number, iva: number): number => {
+export const calcularPrecioConIva = (precioSinIva: number, iva: number): number => {
   return precioSinIva + iva;
 };
 

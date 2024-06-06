@@ -1,6 +1,7 @@
 import { procesarLineaTicket } from "./ticket.helpers";
 import { productos } from "./ticketdata";
-const calculaTicket = (lineasTicket: LineaTicket[]): TicketFinal => {
+
+export const calculaTicket = (lineasTicket: LineaTicket[]): TicketFinal => {
   const resultadoLineas: ResultadoLineaTicket[] = [];
   const TotalPorTipoIva: TotalPorTipoIva[] = [];
 
