@@ -1,1 +1,3 @@
-import {} from "./ticket-compra"
+import "./style.css";
+
+console.log("Hello Typescript!");

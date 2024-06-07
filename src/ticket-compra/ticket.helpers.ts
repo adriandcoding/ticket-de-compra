@@ -1,54 +1,77 @@
-// Función para calcular el precio sin IVA
-export const calcularPrecioSinIva = (precio: number, cantidad: number): number => {
-  return precio * cantidad;
+import { productos } from "./infoticket";
+// Definir los porcentajes de IVA
+const ivaPorcentajes = {
+  general: 0.21,
+  reducido: 0.1,
+  superreducidoA: 0.05,
+  superreducidoB: 0.04,
+  superreducidoC: 0.0,
+  sinIva: 0.0,
+};
+export const calcularLineas = (
+  lineasTicket: LineaTicket[]
+): ResultadoLineaTicket[] => {
+  const resultadoLineas = lineasTicket.map((lineaTicket) => {
+    const { producto, cantidad } = lineaTicket;
+    const { nombre, precio, tipoIva } = producto;
+    return {
+      nombre,
+      cantidad,
+      precioSinIva: precio * cantidad,
+      tipoIva,
+      precioConIva: precio * cantidad +
+        precio *
+        cantidad *
+        ivaPorcentajes[tipoIva],
+    };
+  });
+  return resultadoLineas;
 };
 
-// Función para obtener el porcentaje de IVA
-export const obtenerPorcentajeIva = (tipoIva: TipoIva): number => {
-  switch (tipoIva) {
-    case "general":
-      return 21;
-    case "reducido":
-      return 10;
-    case "superreducidoA":
-      return 5;
-    case "superreducidoB":
-      return 4;
-    case "superreducidoC":
-      return 0;
-    case "sinIva":
-      return 0;
-    default:
-      return 0;
-  }
+const listadoTiposDeIVa:TipoIva[]= [
+  "general",
+  "reducido",
+  "superreducidoA",
+  "superreducidoB",
+  "superreducidoC",
+  "sinIva",
+]
+
+const calcularPrecioTotalSinIva = (productos:LineaTicket[]):number=>productos.reduce(
+  (acc, producto) => acc + producto.cantidad * producto.producto.precio,
+  0
+);
+const calcularIvaProducto = (productos: LineaTicket[]): number => {
+  return productos.reduce(
+    (acc, producto) =>
+      acc +
+      producto.cantidad *
+      producto.producto.precio *
+      ivaPorcentajes[producto.producto.tipoIva],
+    0
+  )
+};
+const precioTotal = calcularPrecioTotalSinIva(productos) + calcularIvaProducto(productos);
+export const total: ResultadoTotalTicket = {
+  totalSinIva: calcularPrecioTotalSinIva(productos),
+  totalConIva: precioTotal,
+  totalIva: calcularIvaProducto(productos),
 };
 
-// Función para calcular el IVA
-export const calcularIva = (precioSinIva: number, porcentajeIva: number): number => {
-  return (precioSinIva * porcentajeIva) / 100;
-};
-
-// Función para calcular el precio con IVA
-export const calcularPrecioConIva = (precioSinIva: number, iva: number): number => {
-  return precioSinIva + iva;
-};
-
-// Función para procesar una línea del ticket
-export const procesarLineaTicket = (
-  linea: LineaTicket
-): ResultadoLineaTicket & { iva: number } => {
-  const { producto, cantidad } = linea;
-  const precioSinIva = calcularPrecioSinIva(producto.precio, cantidad);
-  const porcentajeIva = obtenerPorcentajeIva(producto.tipoIva);
-  const iva = calcularIva(precioSinIva, porcentajeIva);
-  const precioConIva = calcularPrecioConIva(precioSinIva, iva);
-
+export const obtenerTotalPorTipoIva = (lineasTicket: LineaTicket[]):TotalPorTipoIva[] => {
+  const listaDeTotalPorTipoDeIva = listadoTiposDeIVa.map((tipoDeIva) => mapearAtotalPorTipoDeIva(tipoDeIva, lineasTicket))
+  const listaDeTotalPorTipoDeIvaFiltrado = 
+  listaDeTotalPorTipoDeIva.filter((totalPorTipoDeIva) => totalPorTipoDeIva.cuantia > 0)
+  return listaDeTotalPorTipoDeIvaFiltrado;
+}
+ 
+const mapearAtotalPorTipoDeIva = (tipoDeIva: TipoIva, lineasTicket: LineaTicket[]): TotalPorTipoIva => {
+  const productosAgrupadosPorTipoDeIva = lineasTicket.filter((lineaTicket) => {
+    return lineaTicket.producto.tipoIva === tipoDeIva;
+  })
   return {
-    nombre: producto.nombre,
-    cantidad,
-    precioSinIva,
-    tipoIva: producto.tipoIva,
-    precioConIva,
-    iva,
-  };
-};
+    tipoIva: tipoDeIva,
+    cuantia: calcularIvaProducto(productosAgrupadosPorTipoDeIva),
+
+  }
+}
