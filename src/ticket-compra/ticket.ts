@@ -1,13 +1,14 @@
 import { productos } from "./infoticket"
-import { total,calcularLineas, obtenerTotalPorTipoIva } from "./ticket.helpers"
+import { calcularTotal,calcularLineas, obtenerTotalPorTipoIva } from "./ticket.helpers"
 export const calculaTicket = (lineasTicket: LineaTicket[]): TicketFinal => {
   return {
     lineas: calcularLineas(lineasTicket),
-    total: total,
+    total: calcularTotal(lineasTicket),
     desgloseIva:obtenerTotalPorTipoIva(lineasTicket)
 
   }
 
 
 }
-console.log(calculaTicket(productos))
+const ticketFinal= calculaTicket(productos)
+console.log(ticketFinal)
