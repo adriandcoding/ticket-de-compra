@@ -1,4 +1,3 @@
-import { productos } from "./infoticket";
 // Definir los porcentajes de IVA
 const ivaPorcentajes = {
   general: 0.21,
@@ -60,14 +59,6 @@ export const calcularTotal = (productos: LineaTicket[]): ResultadoTotalTicket =>
   }
   return ivas;
 };
-
-export const obtenerTotalPorTipoIva = (lineasTicket: LineaTicket[]):TotalPorTipoIva[] => {
-  const listaDeTotalPorTipoDeIva = listadoTiposDeIVa.map((tipoDeIva) => mapearAtotalPorTipoDeIva(tipoDeIva, lineasTicket))
-  const listaDeTotalPorTipoDeIvaFiltrado = 
-  listaDeTotalPorTipoDeIva.filter((totalPorTipoDeIva) => totalPorTipoDeIva.cuantia > 0)
-  return listaDeTotalPorTipoDeIvaFiltrado;
-}
- 
 export const mapearAtotalPorTipoDeIva = (tipoDeIva: TipoIva, lineasTicket: LineaTicket[]): TotalPorTipoIva => {
   const productosAgrupadosPorTipoDeIva = lineasTicket.filter((lineaTicket) => {
     return lineaTicket.producto.tipoIva === tipoDeIva;
@@ -78,3 +69,10 @@ export const mapearAtotalPorTipoDeIva = (tipoDeIva: TipoIva, lineasTicket: Linea
 
   }
 }
+export const obtenerTotalPorTipoIva = (lineasTicket: LineaTicket[]):TotalPorTipoIva[] => {
+  const listaDeTotalPorTipoDeIva = listadoTiposDeIVa.map((tipoDeIva) => mapearAtotalPorTipoDeIva(tipoDeIva, lineasTicket))
+  const listaDeTotalPorTipoDeIvaFiltrado = 
+  listaDeTotalPorTipoDeIva.filter((totalPorTipoDeIva) => totalPorTipoDeIva.cuantia > 0)
+  return listaDeTotalPorTipoDeIvaFiltrado;
+}
+ 
