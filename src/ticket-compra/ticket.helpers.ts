@@ -36,12 +36,12 @@ const listadoTiposDeIVa: TipoIva[] = [
 
 export const calcularPrecioTotalSinIva = (productos: LineaTicket[]): number =>
   productos.reduce(
-    (acc, producto) => acc + producto.cantidad * producto.producto.precio,
+    (acc, producto):number => acc + producto.cantidad * producto.producto.precio,
     0
   );
 export const calcularIvaProducto = (productos: LineaTicket[]): number => {
   return productos.reduce(
-    (acc, producto) =>
+    (acc, producto):number =>
       acc +
       producto.cantidad *
         producto.producto.precio *
@@ -65,7 +65,7 @@ export const mapearAtotalPorTipoDeIva = (
   tipoDeIva: TipoIva,
   lineasTicket: LineaTicket[]
 ): TotalPorTipoIva => {
-  const productosAgrupadosPorTipoDeIva = lineasTicket.filter((lineaTicket) => {
+  const productosAgrupadosPorTipoDeIva = lineasTicket.filter((lineaTicket):boolean=> {
     return lineaTicket.producto.tipoIva === tipoDeIva;
   });
   return {
@@ -76,11 +76,11 @@ export const mapearAtotalPorTipoDeIva = (
 export const obtenerTotalPorTipoIva = (
   lineasTicket: LineaTicket[]
 ): TotalPorTipoIva[] => {
-  const listaDeTotalPorTipoDeIva = listadoTiposDeIVa.map((tipoDeIva) =>
+  const listaDeTotalPorTipoDeIva = listadoTiposDeIVa.map((tipoDeIva):TotalPorTipoIva=>
     mapearAtotalPorTipoDeIva(tipoDeIva, lineasTicket)
   );
   const listaDeTotalPorTipoDeIvaFiltrado = listaDeTotalPorTipoDeIva.filter(
-    (totalPorTipoDeIva) => totalPorTipoDeIva.cuantia > 0
+    (totalPorTipoDeIva):boolean => totalPorTipoDeIva.cuantia > 0
   );
   return listaDeTotalPorTipoDeIvaFiltrado;
 };
